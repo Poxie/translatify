@@ -6,17 +6,19 @@ export default function Input({
     placeholder,
     onTextChange,
     style,
+    multiline=true,
 }: {
     placeholder: string;
     onTextChange: (text: string) => void;
     style?: StyleProp<TextStyle>;
+    multiline?: boolean;
 }) {
     return(
         <TextInput 
             placeholder={placeholder}
             style={[styles.container, style]}
             onChangeText={onTextChange}
-            multiline
+            multiline={multiline}
         />
     )
 }
