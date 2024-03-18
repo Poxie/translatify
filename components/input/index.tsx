@@ -3,6 +3,7 @@ import Spacing from "@/constants/Spacing";
 import { StyleProp, StyleSheet, TextInput, TextStyle } from "react-native";
 
 export default function Input({
+    defaultValue,
     placeholder,
     onTextChange,
     style,
@@ -13,6 +14,7 @@ export default function Input({
     placeholder: string;
     onTextChange: (text: string) => void;
     style?: StyleProp<TextStyle>;
+    defaultValue?: string;
     multiline?: boolean;
     isPassword?: boolean;
     inputMode?: "text" | "email";
@@ -25,6 +27,7 @@ export default function Input({
             multiline={multiline}
             inputMode={inputMode}
             secureTextEntry={isPassword}
+            defaultValue={defaultValue}
         />
     )
 }
