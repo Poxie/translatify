@@ -29,7 +29,6 @@ export default function CreateScreen({ route: {
     const headerText = prevWord ? prevWord.term : 'New Word';
 
     const [info, setInfo] = useState(prevWord || getDummyWord())
-    const [feedback, setFeedback] = useState<null | string>(null);
     const [loading, setLoading] = useState(false);
 
     const disabled = !info.term || !info.definition || loading;
