@@ -8,7 +8,7 @@ import { db, useAuth } from "@/contexts/auth";
 import useColors from "@/hooks/useColors";
 import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { useNavigation } from "@react-navigation/native";
-import { doc, addDoc, collection } from "firebase/firestore";
+import { doc, collection, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -37,11 +37,13 @@ export default function CreateScreen() {
         if(disabled) return;
 
         setLoading(true);
-        await addDoc(collection(db, 'words'), {
+        const docRef = doc(collection(db, 'words'));
+        await setDoc(docRef, {
+            id: docRef.id,
             term: info.term,
             definition: info.definition,
             authorId: user.uid,
-        })
+        });
         navigation.goBack();
     }
 
