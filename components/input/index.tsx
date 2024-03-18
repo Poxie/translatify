@@ -6,12 +6,16 @@ export default function Input({
     placeholder,
     onTextChange,
     style,
+    isPassword,
+    inputMode,
     multiline=true,
 }: {
     placeholder: string;
     onTextChange: (text: string) => void;
     style?: StyleProp<TextStyle>;
     multiline?: boolean;
+    isPassword?: boolean;
+    inputMode?: "text" | "email";
 }) {
     return(
         <TextInput 
@@ -19,6 +23,8 @@ export default function Input({
             style={[styles.container, style]}
             onChangeText={onTextChange}
             multiline={multiline}
+            inputMode={inputMode}
+            secureTextEntry={isPassword}
         />
     )
 }

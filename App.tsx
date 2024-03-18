@@ -1,7 +1,7 @@
 import { Text } from './components/Themed';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { User, createUserWithEmailAndPassword, getReactNativePersistence, initializeAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { User, createUserWithEmailAndPassword, getReactNativePersistence, initializeAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 // Import the functions you need from the SDKs you need
@@ -123,6 +123,7 @@ export default function App() {
             You have to {isSigningIn ? 'sign in' : 'sign up'} to use this application.
           </Text>
           <Input 
+            inputMode="email"
             multiline={false}
             placeholder="Email"
             onTextChange={text => updateInfo('email', text)}
@@ -131,7 +132,8 @@ export default function App() {
               { backgroundColor: colors.backgroundSecondary },
             ]}
           />
-          <Input 
+          <Input
+            isPassword
             multiline={false}
             placeholder="Password"
             onTextChange={text => updateInfo('password', text)}
@@ -142,6 +144,7 @@ export default function App() {
           />
           {!isSigningIn && (  
             <Input 
+              isPassword
               multiline={false}
               placeholder="Repeat password"
               onTextChange={text => updateInfo('repeatPassword', text)}
