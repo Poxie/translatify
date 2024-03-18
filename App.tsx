@@ -94,6 +94,7 @@ export default function App() {
           options={{ 
             presentation: 'modal',
             headerShown: false,
+            gestureEnabled: false,
           }}
         />
       </Stack.Navigator>
