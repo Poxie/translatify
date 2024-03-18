@@ -4,9 +4,12 @@ import Section from "@/components/section";
 import Selector from "@/components/selector";
 import BorderRadius from "@/constants/BorderRadius";
 import Spacing from "@/constants/Spacing";
+import { db } from "@/contexts/auth";
 import useColors from "@/hooks/useColors";
 import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { useNavigation } from "@react-navigation/native";
+import { doc, addDoc, collection } from "firebase/firestore";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 const HEADER_TEXT = 'New Word';
@@ -14,25 +17,52 @@ export default function CreateScreen() {
     const colors = useColors();
     const navigation = useNavigation();
 
+    const [info, setInfo] = useState({
+        term: '',
+        definition: '',
+    })
+    const [feedback, setFeedback] = useState<null | string>(null);
+    const [loading, setLoading] = useState(false);
+
+    const disabled = !info.term || !info.definition || loading;
+
+    const updateInfo = (key: keyof typeof info, value: string) => {
+        setInfo({
+            ...info,
+            [key]: value,
+        });
+    }
+    const addWord = async () => {
+        if(disabled) return;
+
+        setLoading(true);
+        await addDoc(collection(db, 'words'), {
+            term: info.term,
+            definition: info.definition,
+        })
+        navigation.goBack();
+    }
+
     useHeaderOptions({
         headerText: HEADER_TEXT,
         headerLeftText: 'Cancel',
         headerRightText: 'Done',
         onHeaderLeftPress: navigation.goBack,
-        onHeaderRightPress: () => console.log('Done'),
-    })
+        onHeaderRightPress: addWord,
+        headerRightDisabled: disabled,
+    });
 
     return(
         <View style={styles.container}>
             <Section>
                 <Input 
-                    onTextChange={console.log}
+                    onTextChange={text => updateInfo('term', text)}
                     placeholder="Term"
                 />
                 <Divider />
                 <Input 
                     style={{ minHeight: 100 }}
-                    onTextChange={console.log}
+                    onTextChange={text => updateInfo('definition', text)}
                     placeholder="Definition"
                 />
             </Section>
