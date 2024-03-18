@@ -11,7 +11,10 @@ export default function ListScreen() {
 
     return(
         <SafeAreaView style={styles.container}>
-            <SectionHeader style={styles.sectionHeader}>
+            <SectionHeader 
+                subHeader={`${words.length} words`}
+                style={styles.sectionHeader}
+            >
                 Uncategorized
             </SectionHeader>
             <Section style={styles.section}>
