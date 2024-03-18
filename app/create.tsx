@@ -4,7 +4,7 @@ import Section from "@/components/section";
 import Selector from "@/components/selector";
 import BorderRadius from "@/constants/BorderRadius";
 import Spacing from "@/constants/Spacing";
-import { db } from "@/contexts/auth";
+import { db, useAuth } from "@/contexts/auth";
 import useColors from "@/hooks/useColors";
 import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { useNavigation } from "@react-navigation/native";
@@ -14,6 +14,7 @@ import { StyleSheet, View } from "react-native";
 
 const HEADER_TEXT = 'New Word';
 export default function CreateScreen() {
+    const { user } = useAuth();
     const colors = useColors();
     const navigation = useNavigation();
 
@@ -39,6 +40,7 @@ export default function CreateScreen() {
         await addDoc(collection(db, 'words'), {
             term: info.term,
             definition: info.definition,
+            authorId: user.uid,
         })
         navigation.goBack();
     }
