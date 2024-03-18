@@ -20,17 +20,20 @@ export type RootStackParamList = {
     Import: undefined;
     Export: undefined;
     Modal: {
-        screen: keyof ModalStackParamList
+        screen: keyof ModalStackParamList;
+        params?: any;
     };
 }
 const Stack = createNativeStackNavigator<RootStackParamList>();
   
 export type ModalStackParamList = {
-    Create: undefined;
+    Create: {
+        prevId: string;
+    };
     SelectCategory: undefined;
 }
-    const ModalStack = createNativeStackNavigator<ModalStackParamList>();
-    const ModalStackScreen = () => {
+const ModalStack = createNativeStackNavigator<ModalStackParamList>();
+const ModalStackScreen = () => {
     const colors = useColors();
   
     return(
@@ -41,6 +44,7 @@ export type ModalStackParamList = {
             <ModalStack.Screen 
                 name="Create"
                 component={CreateScreen}
+                initialParams={{ prevId: '' }}
             />
             <ModalStack.Screen 
                 name="SelectCategory"

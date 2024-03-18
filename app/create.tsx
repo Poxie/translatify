@@ -2,26 +2,33 @@ import Divider from "@/components/divider";
 import Input from "@/components/input";
 import Section from "@/components/section";
 import Selector from "@/components/selector";
-import BorderRadius from "@/constants/BorderRadius";
 import Spacing from "@/constants/Spacing";
 import { db, useAuth } from "@/contexts/auth";
-import useColors from "@/hooks/useColors";
 import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { useNavigation } from "@react-navigation/native";
 import { doc, collection, setDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { ModalStackParamList } from ".";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useDatabase } from "@/contexts/database";
 
-const HEADER_TEXT = 'New Word';
-export default function CreateScreen() {
+const getDummyWord = () => ({
+    term: '',
+    definition: '',
+})
+export default function CreateScreen({ route: {
+    params: { prevId }
+} }: NativeStackScreenProps<ModalStackParamList, 'Create'>) {
     const { user } = useAuth();
-    const colors = useColors();
+    const { getWordById } = useDatabase();
+
     const navigation = useNavigation();
 
-    const [info, setInfo] = useState({
-        term: '',
-        definition: '',
-    })
+    const prevWord = useMemo(() => getWordById(prevId), [prevId]);
+    const headerText = prevWord ? prevWord.term : 'New Word';
+
+    const [info, setInfo] = useState(prevWord || getDummyWord())
     const [feedback, setFeedback] = useState<null | string>(null);
     const [loading, setLoading] = useState(false);
 
@@ -37,20 +44,28 @@ export default function CreateScreen() {
         if(disabled) return;
 
         setLoading(true);
-        const docRef = doc(collection(db, 'words'));
-        await setDoc(docRef, {
-            id: docRef.id,
-            term: info.term,
-            definition: info.definition,
-            authorId: user.uid,
-        });
-        navigation.goBack();
+        
+        if(!prevWord) {
+            const docRef = doc(collection(db, 'words'));
+            await setDoc(docRef, {
+                id: docRef.id,
+                term: info.term,
+                definition: info.definition,
+                authorId: user.uid,
+            });
+            navigation.goBack();
+            return;
+        }
+
+        const docRef = doc(collection(db, 'words'), prevWord.id);
+        await setDoc(docRef, info);
+        setLoading(false);
     }
 
     useHeaderOptions({
-        headerText: HEADER_TEXT,
-        headerLeftText: 'Cancel',
-        headerRightText: 'Done',
+        headerText,
+        headerLeftText: prevWord ? 'Close' : 'Cancel',
+        headerRightText: prevWord ? loading ? 'Saving...' : 'Save' : 'Done',
         onHeaderLeftPress: navigation.goBack,
         onHeaderRightPress: addWord,
         headerRightDisabled: disabled,
@@ -60,11 +75,13 @@ export default function CreateScreen() {
         <View style={styles.container}>
             <Section>
                 <Input 
+                    defaultValue={info.term}
                     onTextChange={text => updateInfo('term', text)}
                     placeholder="Term"
                 />
                 <Divider />
                 <Input 
+                    defaultValue={info.definition}
                     style={{ minHeight: 100 }}
                     onTextChange={text => updateInfo('definition', text)}
                     placeholder="Definition"

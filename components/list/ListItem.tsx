@@ -4,13 +4,25 @@ import { Word } from "@/types";
 import FontSizes from "@/constants/FontSizes";
 import useColors from "@/hooks/useColors";
 import Spacing from "@/constants/Spacing";
+import { useNavigation } from "@react-navigation/native";
 
-export default function ListItem({ term, definition }: Word) {
+export default function ListItem({ id, term, definition }: Word) {
     const colors = useColors();
+    const navigation = useNavigation();
+
+    const viewWord = () => {
+        navigation.navigate('Modal', {
+            screen: 'Create',
+            params: {
+                prevId: id,
+            }
+        })
+    }
 
     return(
         <TouchableOpacity 
             style={styles.container}
+            onPress={viewWord}
         >
             <Text style={styles.term}>
                 {term}
