@@ -6,6 +6,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 
 const DatabaseContext = createContext<null | {
     words: Word[];
+    getWordById: (id: string) => Word | undefined;
 }>(null);
 
 export const useDatabase = () => {
@@ -25,8 +26,13 @@ export default function DatabaseProvider({ children }: {
     const wordsQuery = query(wordsRef, where('authorId', '==', user.uid));
     const [words, loading] = useCollectionData(wordsQuery);
 
+    const getWordById = (id: string) => {
+        return (words || []).find(word => word.id === id) as Word | undefined;
+    }
+
     const value = {
-        words: words as Word[],
+        words: (words || []) as Word[],
+        getWordById,
         loading,
     }
     return(
