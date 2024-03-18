@@ -74,6 +74,11 @@ export default function Navigation() {
                 <Stack.Screen 
                     name="List"
                     component={ListScreen}
+                    options={{ 
+                        title: 'Word list',
+                        headerLargeTitle: true, 
+                        headerStyle: { backgroundColor: 'transparent'}
+                    }}
                 />
                 <Stack.Screen 
                     name="Favorites"

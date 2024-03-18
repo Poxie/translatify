@@ -4,13 +4,13 @@ import Section from "@/components/section";
 import SectionHeader from "@/components/section-header";
 import Spacing from "@/constants/Spacing";
 import { useDatabase } from "@/contexts/database";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 
 export default function ListScreen() {
     const { words } = useDatabase();
 
     return(
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <SectionHeader style={styles.sectionHeader}>
                 Uncategorized
             </SectionHeader>
@@ -22,13 +22,13 @@ export default function ListScreen() {
                     />
                 ))}
             </Section>
-        </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        padding: Spacing.primary,
+        margin: Spacing.primary,
     },
     sectionHeader: {
         marginBottom: Spacing.tertiary
