@@ -1,4 +1,4 @@
-import { ModalStackParamList, RootStackParamList } from "@/App";
+import { ModalStackParamList, RootStackParamList } from "@/app/index";
 import { useNavigation } from "@react-navigation/native";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 

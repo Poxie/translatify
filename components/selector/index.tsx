@@ -5,7 +5,7 @@ import FontSizes from "@/constants/FontSizes";
 import { MaterialIcons } from "@expo/vector-icons";
 import useColors from "@/hooks/useColors";
 import Link from "../Link";
-import { ModalStackParamList } from "@/App";
+import { ModalStackParamList } from "@/app/index";
 
 export default function Selector({
     selectorText,
