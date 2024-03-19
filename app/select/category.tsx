@@ -9,6 +9,8 @@ import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ModalStackParamList } from "..";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import Divider from "@/components/divider";
+import React from "react";
 
 export default function SelectCategoryScreen({ route: {
     params
@@ -46,15 +48,19 @@ export default function SelectCategoryScreen({ route: {
     return(
         <View style={styles.container}>
             <Section style={styles.section}>
-                {categories.map(category => (
-                    <TouchableOpacity 
-                        onPress={() => selectCategory(category.id)}
-                        key={category.id}
-                    >
-                        <Text style={styles.itemText}>
-                            {category.name}
-                        </Text>
-                    </TouchableOpacity>
+                {categories.map((category, index) => (
+                    <React.Fragment key={category.id}>
+                        <TouchableOpacity 
+                            onPress={() => selectCategory(category.id)}
+                        >
+                            <Text style={styles.itemText}>
+                                {category.name}
+                            </Text>
+                        </TouchableOpacity>
+                        {index !== categories.length - 1 && (
+                            <Divider style={{ marginHorizontal: 0 }} />
+                        )}
+                    </React.Fragment>
                 ))}
                 {categories.length === 0 && (
                     <Text style={[
@@ -76,12 +82,12 @@ const styles = StyleSheet.create({
     },
     section: {
         paddingHorizontal: Spacing.primary,
-        paddingVertical: Spacing.primary - Spacing.tertiary / 1.5,
+        paddingVertical: Spacing.primary - Spacing.secondary * 1.5,
     },
     itemText: {
         fontSize: FontSizes.default,
         fontWeight: '500',
-        paddingVertical: Spacing.tertiary / 1.5,
+        paddingVertical: Spacing.secondary * 1.5,
     },
     empty: {
         textAlign: 'center',
