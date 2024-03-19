@@ -48,7 +48,7 @@ export default function SelectCategoryScreen({ route: {
 
     return(
         <View style={styles.container}>
-            <Section style={styles.section}>
+            <Section>
                 {categories.map((category, index) => (
                     <React.Fragment key={category.id}>
                         <TouchableOpacity 
@@ -59,11 +59,11 @@ export default function SelectCategoryScreen({ route: {
                                 {category.name}
                             </Text>
                             {category.id === params.currentActive && (
-                                <Ionicons name="checkmark-outline" size={24} />
+                                <Ionicons name="checkmark-outline" size={20} />
                             )}
                         </TouchableOpacity>
                         {index !== categories.length - 1 && (
-                            <Divider style={{ marginHorizontal: 0 }} />
+                            <Divider />
                         )}
                     </React.Fragment>
                 ))}
@@ -85,19 +85,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: Spacing.primary,
         paddingVertical: Spacing.secondary,
     },
-    section: {
-        paddingHorizontal: Spacing.primary,
-        paddingVertical: Spacing.primary - Spacing.secondary * 1.5,
-    },
     item: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        padding: Spacing.secondary * 1.5,
     }, 
     itemText: {
         fontSize: FontSizes.default,
         fontWeight: '500',
-        paddingVertical: Spacing.secondary * 1.5,
     },
     empty: {
         textAlign: 'center',
