@@ -6,44 +6,44 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import Select from ".";
 
-export default function SelectCategoryScreen({ route: {
+export default function SelectLanguageScreen({ route: {
     params
-} }: NativeStackScreenProps<ModalStackParamList, 'SelectCategory'>) {
-    const { categories } = useDatabase();
+} }: NativeStackScreenProps<ModalStackParamList, 'SelectLanguage'>) {
+    const { languages } = useDatabase();
 
     const navigation = useNavigation();
 
-    const selectCategory = (categoryId: string) => {
+    const selectLanguage = (languageId: string) => {
         navigation.navigate({
             name: 'Modal',
             params: {
                 screen: 'Create',
                 params: {
                     ...params,
-                    categoryId: categoryId === params.currentActive ? null : categoryId,
+                    languageId: languageId === params.currentActive ? null : languageId,
                 },
             },
         })
     }
 
-    const createCategory = () => {
+    const createLanguage = () => {
         navigation.navigate('Modal', {
-            screen: 'CreateCategory',
+            screen: 'CreateLanguage',
         })
     }
 
     useHeaderOptions({ 
-        headerText: 'Select Category',
+        headerText: 'Select Language',
         headerRightText: 'Create',
-        onHeaderRightPress: createCategory,
+        onHeaderRightPress: createLanguage,
     });
 
     return(
         <Select 
             currentActive={params.currentActive}
-            items={categories}
-            onSelect={selectCategory}
-            emptyLabel="You have no categories yet."
+            items={languages}
+            onSelect={selectLanguage}
+            emptyLabel="You have no languages yet."
         />
     )
 }

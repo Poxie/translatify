@@ -1,4 +1,4 @@
-import { Category, Word } from "@/types";
+import { Category, Language, Word } from "@/types";
 import { collection, query, where } from "firebase/firestore";
 import { createContext, useContext } from "react"
 import { db, useAuth } from "../auth";
@@ -7,8 +7,10 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 const DatabaseContext = createContext<null | {
     words: Word[];
     categories: Category[];
+    languages: Language[];
     getWordById: (id: string) => Word | undefined;
     getCategoryById: (id?: string) => Category | undefined;
+    getLanguageById: (id?: string) => Language | undefined;
 }>(null);
 
 export const useDatabase = () => {
@@ -32,6 +34,10 @@ export default function DatabaseProvider({ children }: {
     const categoryQuery = query(categoryRef, where('authorId', '==', user.uid));
     const [categories] = useCollectionData(categoryQuery);
 
+    const languageRef = collection(db, 'languages');
+    const languageQuery = query(languageRef, where('authorId', '==', user.uid));
+    const [languages] = useCollectionData(languageQuery);
+
     const getWordById = (id: string) => {
         return (words || []).find(word => word.id === id) as Word | undefined;
     }
@@ -39,10 +45,16 @@ export default function DatabaseProvider({ children }: {
         if(!id) return;
         return (categories || []).find(category => category.id === id) as Category | undefined;
     }
+    const getLanguageById = (id?: string) => {
+        if(!id) return;
+        return (languages || []).find(language => language.id === id) as Language | undefined;
+    }
 
     const value = {
         words: (words || []) as Word[],
         categories: (categories || []) as Category[],
+        languages: (languages || []) as Language[],
+        getLanguageById,
         getCategoryById,
         getWordById,
     }

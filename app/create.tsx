@@ -18,12 +18,13 @@ const getDummyWord: () => Partial<Word> = () => ({
     term: '',
     definition: '',
     categoryId: null,
+    languageId: null,
 })
 export default function CreateScreen({ route: { params } }: NativeStackScreenProps<ModalStackParamList, 'Create'>) {
-    const { prevId, categoryId } = params;
+    const { prevId, categoryId, languageId } = params;
     
     const { user } = useAuth();
-    const { getWordById, getCategoryById } = useDatabase();
+    const { getWordById, getCategoryById, getLanguageById } = useDatabase();
 
     const navigation = useNavigation();
 
@@ -34,17 +35,26 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if(categoryId === undefined) return;
-        
-        setInfo({
-            ...info,
-            categoryId,
+        setInfo(prev => {
+            const newArgs = Object.entries(params).filter(([key, value]) => value !== undefined);
+
+            const newInfo = newArgs.reduce((acc, [key, value]) => {
+                return {
+                    ...acc,
+                    [key]: value,
+                }
+            }, prev);
+
+            return newInfo;
         })
-    }, [categoryId]);
+    }, [params]);
     
     const category = useMemo(() => (
         info.categoryId ? getCategoryById(info.categoryId) : undefined
     ), [info.categoryId]);
+    const language = useMemo(() => (
+        info.languageId ? getLanguageById(info.languageId) : undefined
+    ), [info.languageId]);
 
     const disabled = !info.term || !info.definition || loading;
 
@@ -66,6 +76,7 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
                 term: info.term,
                 definition: info.definition,
                 categoryId: info.categoryId,
+                languageId: info.languageId,
                 authorId: user.uid,
             });
             navigation.goBack();
@@ -110,6 +121,16 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
                     params={{
                         ...params,
                         currentActive: info.categoryId,
+                    }}
+                />
+                <Divider />
+                <Selector 
+                    activeText={language?.name}
+                    selectorText="Language"
+                    screen={"SelectLanguage"}
+                    params={{
+                        ...params,
+                        currentActive: info.languageId,
                     }}
                 />
             </Section>
