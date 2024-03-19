@@ -56,6 +56,13 @@ export default function ListScreen() {
                         </View>
                     )
                 })}
+                {words.length === 0 && (
+                    <Section style={styles.section}>
+                        <Text style={styles.empty}>
+                            No words to display.
+                        </Text>
+                    </Section>
+                )}
             </ScrollView>
         </SafeAreaView>
     )
