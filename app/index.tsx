@@ -34,6 +34,7 @@ export type ModalStackParamList = {
     };
     SelectCategory: {
         params: Record<string, any>;
+        currentActive: string;
     };
     CreateCategory: undefined;
 }

@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ModalStackParamList } from "..";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Ionicons } from "@expo/vector-icons";
 import Divider from "@/components/divider";
 import React from "react";
 
@@ -27,7 +28,7 @@ export default function SelectCategoryScreen({ route: {
                 screen: 'Create',
                 params: {
                     ...params,
-                    categoryId,
+                    categoryId: categoryId === params.currentActive ? null : categoryId,
                 },
             },
         })
@@ -52,10 +53,14 @@ export default function SelectCategoryScreen({ route: {
                     <React.Fragment key={category.id}>
                         <TouchableOpacity 
                             onPress={() => selectCategory(category.id)}
+                            style={styles.item}
                         >
                             <Text style={styles.itemText}>
                                 {category.name}
                             </Text>
+                            {category.id === params.currentActive && (
+                                <Ionicons name="checkmark-outline" size={24} />
+                            )}
                         </TouchableOpacity>
                         {index !== categories.length - 1 && (
                             <Divider style={{ marginHorizontal: 0 }} />
@@ -84,6 +89,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: Spacing.primary,
         paddingVertical: Spacing.primary - Spacing.secondary * 1.5,
     },
+    item: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    }, 
     itemText: {
         fontSize: FontSizes.default,
         fontWeight: '500',

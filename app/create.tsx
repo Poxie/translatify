@@ -34,8 +34,8 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if(!categoryId) return;
-
+        if(categoryId === undefined) return;
+        
         setInfo({
             ...info,
             categoryId,
@@ -107,7 +107,10 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
                     activeText={category?.name}
                     selectorText="Category"
                     screen={"SelectCategory"}
-                    prevParams={params}
+                    params={{
+                        ...params,
+                        currentActive: info.categoryId,
+                    }}
                 />
             </Section>
         </View>
