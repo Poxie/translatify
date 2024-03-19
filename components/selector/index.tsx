@@ -8,11 +8,15 @@ import Link from "../Link";
 import { ModalStackParamList } from "@/app/index";
 
 export default function Selector({
+    activeText,
     selectorText,
     screen,
+    prevParams,
 }: {
+    activeText?: string;
     selectorText: string;
     screen: keyof ModalStackParamList;
+    prevParams?: Record<string, any>;
 }) {
     const colors = useColors();
 
@@ -20,16 +24,25 @@ export default function Selector({
         <Link 
             href={'Modal'} 
             screen={screen}
+            params={prevParams}
             style={styles.container}
         >
             <Text style={styles.text}>
                 {selectorText}
             </Text>
-            <MaterialIcons 
-                name="arrow-forward-ios" 
-                size={16}
-                color={colors.muted}
-            />
+            <View style={styles.right}>
+                <Text style={[
+                    styles.text,
+                    { color: colors.muted },
+                ]}>
+                    {activeText || 'Not selected'}
+                </Text>
+                <MaterialIcons 
+                    name="arrow-forward-ios" 
+                    size={16}
+                    color={colors.muted}
+                />
+            </View>
         </Link>
     )
 }
@@ -44,4 +57,9 @@ const styles = StyleSheet.create({
     text: {
         fontSize: FontSizes.default,
     },
+    right: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: Spacing.tertiary,
+    }
 })

@@ -7,21 +7,23 @@ import { db, useAuth } from "@/contexts/auth";
 import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { useNavigation } from "@react-navigation/native";
 import { doc, collection, setDoc } from "firebase/firestore";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ModalStackParamList } from ".";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useDatabase } from "@/contexts/database";
+import { Word } from "@/types";
 
-const getDummyWord = () => ({
+const getDummyWord: () => Partial<Word> = () => ({
     term: '',
     definition: '',
+    categoryId: null,
 })
-export default function CreateScreen({ route: {
-    params: { prevId }
-} }: NativeStackScreenProps<ModalStackParamList, 'Create'>) {
+export default function CreateScreen({ route: { params } }: NativeStackScreenProps<ModalStackParamList, 'Create'>) {
+    const { prevId, categoryId } = params;
+    
     const { user } = useAuth();
-    const { getWordById } = useDatabase();
+    const { getWordById, getCategoryById } = useDatabase();
 
     const navigation = useNavigation();
 
@@ -30,6 +32,19 @@ export default function CreateScreen({ route: {
 
     const [info, setInfo] = useState(prevWord || getDummyWord())
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if(!categoryId) return;
+
+        setInfo({
+            ...info,
+            categoryId,
+        })
+    }, [categoryId]);
+    
+    const category = useMemo(() => (
+        info.categoryId ? getCategoryById(info.categoryId) : undefined
+    ), [info.categoryId]);
 
     const disabled = !info.term || !info.definition || loading;
 
@@ -50,6 +65,7 @@ export default function CreateScreen({ route: {
                 id: docRef.id,
                 term: info.term,
                 definition: info.definition,
+                categoryId: info.categoryId,
                 authorId: user.uid,
             });
             navigation.goBack();
@@ -88,8 +104,10 @@ export default function CreateScreen({ route: {
             </Section>
             <Section>
                 <Selector 
+                    activeText={category?.name}
                     selectorText="Category"
                     screen={"SelectCategory"}
+                    prevParams={params}
                 />
             </Section>
         </View>

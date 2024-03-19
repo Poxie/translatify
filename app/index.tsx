@@ -10,6 +10,7 @@ import ImportScreen from "./import";
 import ExportScreen from "./export";
 import CreateScreen from "./create";
 import SelectCategoryScreen from "./select/category";
+import CreateCategoryScreen from "./create/category";
 
 export type RootStackParamList = {
     Home: undefined;
@@ -29,8 +30,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export type ModalStackParamList = {
     Create: {
         prevId: string;
+        categoryId?: string;
     };
-    SelectCategory: undefined;
+    SelectCategory: {
+        params: Record<string, any>;
+    };
+    CreateCategory: undefined;
 }
 const ModalStack = createNativeStackNavigator<ModalStackParamList>();
 const ModalStackScreen = () => {
@@ -49,6 +54,11 @@ const ModalStackScreen = () => {
             <ModalStack.Screen 
                 name="SelectCategory"
                 component={SelectCategoryScreen}
+            />
+            <ModalStack.Screen 
+                name="CreateCategory"
+                component={CreateCategoryScreen}
+                options={{ headerLargeTitle: true }}
             />
         </ModalStack.Navigator>
     )
