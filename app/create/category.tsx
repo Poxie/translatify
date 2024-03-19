@@ -33,7 +33,7 @@ export default function CreateCategoryScreen() {
         const docRef = doc(collection(db, 'categories'));
         await setDoc(docRef, {
             id: docRef.id,
-            name: info.name,
+            name: info.name.trim(),
             authorId: user.uid,
         });
 
