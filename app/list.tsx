@@ -1,58 +1,55 @@
 import { Text } from "@/components/Themed";
+import ListCategory from "@/components/list/ListCategory";
 import ListItem from "@/components/list/ListItem";
+import ListSection from "@/components/list/ListSection";
 import Section from "@/components/section";
 import SectionHeader from "@/components/section-header";
 import Spacing from "@/constants/Spacing";
 import { useDatabase } from "@/contexts/database";
 import { Category, Word } from "@/types";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, SafeAreaView, View, ScrollView } from "react-native";
 
 export default function ListScreen() {
     const { words, categories } = useDatabase();
 
-    const getWordsByCategoryId = (categoryId: string | null) => (
-        words.filter(word => word.categoryId === categoryId)
-    )
     const sortCategories = (categories: Category[]) => (
         categories.sort((a,b) => a.name[0].localeCompare(b.name[0]))
     ) 
 
-    let allCategories: { id: string | null, name: string }[] = sortCategories(categories);
-    if(words.find(word => !word.categoryId)) {
-        allCategories = [{ id: null, name: 'Uncategorized' }, ...sortCategories(categories)];
-    }
-
+    const uncategorizedWords = words.filter(word => !word.categoryId);
+    const rootCategories = sortCategories(categories.filter(category => !category.parentId));
     return(
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={styles.container}>
-                {allCategories.map(category => {
-                    const words = getWordsByCategoryId(category.id);
-
+                {uncategorizedWords.length !== 0 && (
+                    <>
+                    <SectionHeader style={styles.sectionHeader}>
+                        Uncategorized
+                    </SectionHeader>
+                    <Section style={styles.section}>
+                        {uncategorizedWords.map(word => (
+                            <ListItem 
+                                {...word}
+                                key={word.id}
+                            />
+                        ))}
+                    </Section>
+                    </>
+                )}
+                {rootCategories.map(category => {
                     return(
                         <View 
-                            style={styles.sectionContainer} 
+                            style={{ marginTop: Spacing.primary }}
                             key={category.id}
                         >
-                            <SectionHeader 
-                                subHeader={`${words.length} words`}
-                                style={styles.sectionHeader}
-                            >
+                            <SectionHeader style={styles.sectionHeader}>
                                 {category.name}
                             </SectionHeader>
-                            <Section style={styles.section}>
-                                {words.map(word => (
-                                    <ListItem 
-                                        {...word}
-                                        key={word.id}
-                                    />
-                                ))}
-                                {words.length === 0 && (
-                                    <Text style={styles.empty}>
-                                        This category is empty.
-                                    </Text>
-                                )}
-                            </Section>
+                            <ListSection 
+                                categoryId={category.id}
+                                key={category.id}
+                            />
                         </View>
                     )
                 })}
@@ -72,16 +69,14 @@ const styles = StyleSheet.create({
     container: {
         padding: Spacing.primary,
         paddingTop: 0,
-    },
-    sectionContainer: {
-        marginBottom: Spacing.primary,
+        flex: 1,
     },
     sectionHeader: {
-        marginBottom: Spacing.tertiary
+        marginBottom: Spacing.tertiary,
     },
     section: {
         padding: Spacing.primary,
-        gap: Spacing.secondary
+        gap: Spacing.tertiary,
     },
     empty: {
         textAlign: 'center',

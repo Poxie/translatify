@@ -3,7 +3,7 @@ import Divider from "@/components/divider";
 import Section from "@/components/section";
 import useColors from "@/hooks/useColors";
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Ionicons }  from '@expo/vector-icons';
 import Spacing from "@/constants/Spacing";
 import FontSizes from "@/constants/FontSizes";
@@ -12,17 +12,21 @@ export type SelectItem = {
     id: string;
     name: string;
 }
-export default function Select({ items, currentActive, onSelect, onLongPress, emptyLabel='You have no items yet.' }: {
+export default function Select({ items, currentActive, onSelect, onLongPress, style, emptyLabel='You have no items yet.' }: {
     items: SelectItem[];
     currentActive: string;
     onSelect: (id: string) => void;
     onLongPress?: (id: string) => void;
     emptyLabel?: string;
+    style?: StyleProp<ViewStyle>;
 }) {
     const colors = useColors();
 
     return(
-        <View style={styles.container}>
+        <View style={[
+            styles.container,
+            style,
+        ]}>
             <Section>
                 {items.map((item, index) => (
                     <React.Fragment key={item.id}>

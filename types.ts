@@ -11,6 +11,7 @@ export type Category = {
     id: string;
     name: string;
     authorId: string;
+    parentId: string | null;
 }
 export type Language = {
     id: string;

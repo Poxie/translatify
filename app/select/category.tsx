@@ -20,7 +20,7 @@ export default function SelectCategoryScreen({ route: {
                 screen: 'Create',
                 params: {
                     ...params,
-                    categoryId: categoryId === params.currentActive ? null : categoryId,
+                    categoryId: categoryId === params?.currentActive ? null : categoryId,
                 },
             },
         })
@@ -48,7 +48,7 @@ export default function SelectCategoryScreen({ route: {
 
     return(
         <Select 
-            currentActive={params.currentActive}
+            currentActive={params?.currentActive}
             items={categories}
             onSelect={selectCategory}
             onLongPress={editCategory}

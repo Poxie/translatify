@@ -15,11 +15,15 @@ import CreateLanguageScreen from "./create/language";
 import SelectLanguageScreen from "./select/language";
 import SelectWordClassScreen from "./select/wordClass";
 import CreateWordClassScreen from "./create/wordClass";
+import ListCategoryScreen from "./listCategory";
 
 export type RootStackParamList = {
     Home: undefined;
     Search: undefined;
     List: undefined;
+    ListCategory: {
+        categoryId: string;
+    };
     Favorites: undefined;
     Quiz: undefined;
     Import: undefined;
@@ -124,6 +128,15 @@ export default function Navigation() {
                 <Stack.Screen 
                     name="List"
                     component={ListScreen}
+                    options={{ 
+                        title: 'Word list',
+                        headerLargeTitle: true, 
+                        headerStyle: { backgroundColor: 'transparent'}
+                    }}
+                />
+                <Stack.Screen 
+                    name="ListCategory"
+                    component={ListCategoryScreen}
                     options={{ 
                         title: 'Word list',
                         headerLargeTitle: true, 

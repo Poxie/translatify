@@ -2,25 +2,28 @@ import { ModalStackParamList, RootStackParamList } from "@/app/index";
 import { useNavigation } from "@react-navigation/native";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 
-export default function Link({ children, href, style, screen, params }: {
+export default function Link({ children, href, style, screen, params, push }: {
     children: React.ReactNode;
     href: keyof RootStackParamList;
     style?: StyleProp<ViewStyle>;
     screen?: keyof ModalStackParamList;
     params?: Record<string, any>;
+    push?: boolean;
 }) {
     const navigation = useNavigation();
 
     const onPress = () => {
+        // @ts-ignore
+        const navigate = push ? navigation.push: navigation.navigate;
         if(href !== 'Modal') {
-            navigation.navigate(href);
+            navigate(href, params);
             return;
         }
 
         if(!screen) {
             throw new Error('screen prop is required when href is Modal');
         }
-        navigation.navigate('Modal', { screen, params });
+        navigate('Modal', { screen, params });
     }
 
     return(

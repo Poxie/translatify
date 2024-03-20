@@ -12,11 +12,13 @@ export default function Selector({
     selectorText,
     screen,
     params,
+    push,
 }: {
     activeText?: string;
     selectorText: string;
     screen: keyof ModalStackParamList;
     params?: Record<string, any>;
+    push?: boolean;
 }) {
     const colors = useColors();
 
@@ -25,6 +27,7 @@ export default function Selector({
             href={'Modal'} 
             screen={screen}
             params={params}
+            push={push}
             style={styles.container}
         >
             <Text style={styles.text}>

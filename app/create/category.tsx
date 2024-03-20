@@ -10,6 +10,8 @@ import { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { ModalStackParamList } from "..";
 import { useDatabase } from "@/contexts/database";
+import Select from "../select";
+import SectionHeader from "@/components/section-header";
 
 export default function CreateCategoryScreen({ route: {
     params
@@ -17,18 +19,20 @@ export default function CreateCategoryScreen({ route: {
     const navigation = useNavigation();
     
     const { user } = useAuth();
-    const { getCategoryById } = useDatabase();
+    const { getCategoryById, categories } = useDatabase();
 
     const prevCategory = getCategoryById(params?.prevId);
+    const prevParentCategory = getCategoryById(prevCategory?.parentId);
 
     const [loading, setLoading] = useState(false);
     const [info, setInfo] = useState({
         name: prevCategory?.name || '',
+        parentId: prevCategory?.parentId || null,
     })
 
     const disabled = !info.name || loading;
 
-    const updateInfo = (key: keyof typeof info, value: string) => {
+    const updateInfo = (key: keyof typeof info, value: string | null) => {
         setInfo({
             ...info,
             [key]: value,
@@ -45,6 +49,7 @@ export default function CreateCategoryScreen({ route: {
             await setDoc(docRef, {
                 id: docRef.id,
                 name: info.name.trim(),
+                parentId: info.parentId,
                 authorId: user.uid,
             });
             navigation.goBack();
@@ -54,6 +59,7 @@ export default function CreateCategoryScreen({ route: {
         const docRef = doc(collection(db, 'categories'), prevCategory.id);
         await updateDoc(docRef, {
             name: info.name.trim(),
+            parentId: info.parentId,
         });
         setLoading(false);
     }
@@ -68,6 +74,8 @@ export default function CreateCategoryScreen({ route: {
         onHeaderRightPress: createCategory,
         headerRightDisabled: !info.name,
     })
+
+    const selectableCategories = categories.filter(category => category.id !== prevCategory?.id);
     return(
         <SafeAreaView style={styles.container}>
             <Section>
@@ -77,6 +85,16 @@ export default function CreateCategoryScreen({ route: {
                     defaultValue={info.name}
                 />
             </Section>
+            <SectionHeader style={styles.header}>
+                Parent category
+            </SectionHeader>
+            <Select 
+                items={selectableCategories}
+                currentActive={info.parentId || ''}
+                onSelect={parentId => updateInfo('parentId', parentId === info.parentId ? null : parentId)}
+                emptyLabel={'You have no categories yet.'}
+                style={styles.select}
+            />
         </SafeAreaView>
     )
 }
@@ -84,5 +102,13 @@ export default function CreateCategoryScreen({ route: {
 const styles = StyleSheet.create({
     container: {
         margin: Spacing.primary,
+    },
+    header: {
+        marginTop: Spacing.primary,
+        marginBottom: Spacing.tertiary,
+    },
+    select: {
+        paddingHorizontal: 0,
+        paddingVertical: 0,
     },
 })
