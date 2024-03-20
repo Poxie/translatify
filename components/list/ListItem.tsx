@@ -1,12 +1,14 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "../Themed";
 import { Word } from "@/types";
 import FontSizes from "@/constants/FontSizes";
 import useColors from "@/hooks/useColors";
 import Spacing from "@/constants/Spacing";
 import { useNavigation } from "@react-navigation/native";
+import { useDatabase } from "@/contexts/database";
 
-export default function ListItem({ id, term, definition }: Word) {
+export default function ListItem({ id, term, definition, wordClassId }: Word) {
+    const { getWordClassById } = useDatabase();
     const colors = useColors();
     const navigation = useNavigation();
 
@@ -19,14 +21,22 @@ export default function ListItem({ id, term, definition }: Word) {
         })
     }
 
+    const wordClass = getWordClassById(wordClassId);
     return(
         <TouchableOpacity 
             style={styles.container}
             onPress={viewWord}
         >
-            <Text style={styles.term}>
-                {term}
-            </Text>
+            <View style={styles.header}>
+                <Text style={styles.term}>
+                    {term}
+                </Text>
+                {wordClass && (
+                    <Text style={{ color: colors.muted }}>
+                        {wordClass.name}
+                    </Text>
+                )}
+            </View>
             <Text 
                 numberOfLines={2}
                 style={[
@@ -42,7 +52,12 @@ export default function ListItem({ id, term, definition }: Word) {
 
 const styles = StyleSheet.create({
     container: {
-        gap: Spacing.quaternary
+        gap: Spacing.quaternary,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        gap: 4,
     },
     term: {
         fontSize: FontSizes.default,

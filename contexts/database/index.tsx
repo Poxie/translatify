@@ -10,9 +10,9 @@ const DatabaseContext = createContext<null | {
     wordClasses: WordClass[];
     languages: Language[];
     getWordById: (id: string) => Word | undefined;
-    getCategoryById: (id?: string) => Category | undefined;
-    getWordClassById: (id?: string) => WordClass | undefined;
-    getLanguageById: (id?: string) => Language | undefined;
+    getCategoryById: (id?: string | null) => Category | undefined;
+    getWordClassById: (id?: string | null) => WordClass | undefined;
+    getLanguageById: (id?: string | null) => Language | undefined;
 }>(null);
 
 export const useDatabase = () => {
@@ -44,18 +44,18 @@ export default function DatabaseProvider({ children }: {
     const languageQuery = query(languageRef, where('authorId', '==', user.uid));
     const [languages] = useCollectionData(languageQuery);
 
-    const getWordById = (id: string) => {
+    const getWordById = (id?: string | null) => {
         return (words || []).find(word => word.id === id) as Word | undefined;
     }
-    const getCategoryById = (id?: string) => {
+    const getCategoryById = (id?: string | null) => {
         if(!id) return;
         return (categories || []).find(category => category.id === id) as Category | undefined;
     }
-    const getWordClassById = (id?: string) => {
+    const getWordClassById = (id?: string | null) => {
         if(!id) return;
         return (wordClasses || []).find(wordClass => wordClass.id === id) as WordClass | undefined;
     }
-    const getLanguageById = (id?: string) => {
+    const getLanguageById = (id?: string | null) => {
         if(!id) return;
         return (languages || []).find(language => language.id === id) as Language | undefined;
     }
