@@ -50,15 +50,9 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
         })
     }, [params]);
     
-    const category = useMemo(() => (
-        info.categoryId ? getCategoryById(info.categoryId) : undefined
-    ), [info.categoryId]);
-    const wordClass = useMemo(() => (
-        info.wordClassId ? getWordClassById(info.wordClassId) : undefined
-    ), [info.wordClassId]);
-    const language = useMemo(() => (
-        info.languageId ? getLanguageById(info.languageId) : undefined
-    ), [info.languageId]);
+    const category = info.categoryId ? getCategoryById(info.categoryId) : undefined
+    const wordClass = info.wordClassId ? getWordClassById(info.wordClassId) : undefined
+    const language = info.languageId ? getLanguageById(info.languageId) : undefined;
 
     const disabled = !info.term || !info.definition || loading;
 
