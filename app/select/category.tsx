@@ -31,6 +31,14 @@ export default function SelectCategoryScreen({ route: {
             screen: 'CreateCategory',
         })
     }
+    const editCategory = (id: string) => {
+        navigation.navigate('Modal', {
+            screen: 'CreateCategory',
+            params: {
+                prevId: id,
+            },
+        })
+    }
 
     useHeaderOptions({ 
         headerText: 'Select Category',
@@ -43,6 +51,7 @@ export default function SelectCategoryScreen({ route: {
             currentActive={params.currentActive}
             items={categories}
             onSelect={selectCategory}
+            onLongPress={editCategory}
             emptyLabel="You have no categories yet."
         />
     )

@@ -4,15 +4,24 @@ import Spacing from "@/constants/Spacing";
 import { db, useAuth } from "@/contexts/auth";
 import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { useNavigation } from "@react-navigation/native";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
+import { ModalStackParamList } from "..";
+import { useDatabase } from "@/contexts/database";
 
-export default function CreateWordClassScreen() {
-    const { user } = useAuth();
+export default function CreateWordClassScreen({ route: {
+    params
+} }: NativeStackScreenProps<ModalStackParamList, 'CreateWordClass'>) {
     const navigation = useNavigation();
 
-    const [name, setName] = useState('');
+    const { user } = useAuth();
+    const { getWordClassById } = useDatabase();
+
+    const prevWordClass = getWordClassById(params?.prevId);
+
+    const [name, setName] = useState(prevWordClass?.name || '');
     const [loading, setLoading] = useState(false);;
 
     const disabled = !name || loading;
@@ -21,19 +30,33 @@ export default function CreateWordClassScreen() {
         if(disabled) return;
 
         setLoading(true);
-        const docRef = doc(collection(db, 'wordClasses'));
-        await setDoc(docRef, {
-            id: docRef.id,
-            name: name.trim(),
-            authorId: user.uid,
-        });
+        
+        if(!prevWordClass) {
+            const docRef = doc(collection(db, 'wordClasses'));
+            await setDoc(docRef, {
+                id: docRef.id,
+                name: name.trim(),
+                authorId: user.uid,
+            });
 
-        navigation.goBack();
+            navigation.goBack();
+            return;
+        }
+
+        const docRef = doc(collection(db, 'wordClasses'), prevWordClass.id);
+        await updateDoc(docRef, {
+            name: name.trim(),
+        });
+        setLoading(false);
     }
 
     useHeaderOptions({
-        headerText: 'New Word Class',
-        headerRightText: loading ? 'Creating...' : 'Done',
+        headerText: prevWordClass ? 'Edit Word Class' : 'New Word Class',
+        headerRightText: prevWordClass ? (
+            loading ? 'Saving...' : 'Save'
+        ) : (
+            loading ? 'Creating...' : 'Done'
+        ),
         headerRightDisabled: disabled,
         onHeaderRightPress: createWordClass,
     })
@@ -44,6 +67,7 @@ export default function CreateWordClassScreen() {
                 <Input 
                     placeholder="Word Class Name"
                     onTextChange={text => setName(text)}
+                    defaultValue={name}
                 />
             </Section>
         </SafeAreaView>

@@ -31,6 +31,14 @@ export default function SelectLanguageScreen({ route: {
             screen: 'CreateLanguage',
         })
     }
+    const editLanguage = (id: string) => {
+        navigation.navigate('Modal', {
+            screen: 'CreateLanguage',
+            params: {
+                prevId: id,
+            },
+        })
+    }
 
     useHeaderOptions({ 
         headerText: 'Select Language',
@@ -43,6 +51,7 @@ export default function SelectLanguageScreen({ route: {
             currentActive={params.currentActive}
             items={languages}
             onSelect={selectLanguage}
+            onLongPress={editLanguage}
             emptyLabel="You have no languages yet."
         />
     )

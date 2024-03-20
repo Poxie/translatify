@@ -49,9 +49,15 @@ export type ModalStackParamList = {
         params: Record<string, any>;
         currentActive: string;
     };
-    CreateCategory: undefined;
-    CreateLanguage: undefined;
-    CreateWordClass: undefined;
+    CreateCategory?: {
+        prevId: string;
+    };
+    CreateLanguage?: {
+        prevId: string;
+    };
+    CreateWordClass?: {
+        prevId: string;
+    };
 }
 const ModalStack = createNativeStackNavigator<ModalStackParamList>();
 const ModalStackScreen = () => {

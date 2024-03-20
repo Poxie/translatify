@@ -30,6 +30,17 @@ export default function SelectWordClassScreen({ route: {
             screen: 'CreateWordClass',
         })
     }
+    const editWordClass = (id: string) => {
+        navigation.navigate({
+            name: 'Modal',
+            params: {
+                screen: 'CreateWordClass',
+                params: {
+                    prevId: id,
+                },
+            },
+        })
+    }
 
     useHeaderOptions({
         headerText: 'Select Class',
@@ -42,6 +53,7 @@ export default function SelectWordClassScreen({ route: {
             currentActive={params.currentActive}
             items={wordClasses}
             onSelect={selectWordClass}
+            onLongPress={editWordClass}
             emptyLabel="You have no word classes yet."
         />
     )

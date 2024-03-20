@@ -12,10 +12,11 @@ export type SelectItem = {
     id: string;
     name: string;
 }
-export default function Select({ items, currentActive, onSelect, emptyLabel }: {
+export default function Select({ items, currentActive, onSelect, onLongPress, emptyLabel='You have no items yet.' }: {
     items: SelectItem[];
     currentActive: string;
     onSelect: (id: string) => void;
+    onLongPress?: (id: string) => void;
     emptyLabel?: string;
 }) {
     const colors = useColors();
@@ -23,16 +24,20 @@ export default function Select({ items, currentActive, onSelect, emptyLabel }: {
     return(
         <View style={styles.container}>
             <Section>
-                {items.map((category, index) => (
-                    <React.Fragment key={category.id}>
+                {items.map((item, index) => (
+                    <React.Fragment key={item.id}>
                         <TouchableOpacity 
-                            onPress={() => onSelect(category.id)}
+                            onLongPress={() => {
+                                if(!onLongPress) return;
+                                onLongPress(item.id);
+                            }}
+                            onPress={() => onSelect(item.id)}
                             style={styles.item}
                         >
                             <Text style={styles.itemText}>
-                                {category.name}
+                                {item.name}
                             </Text>
-                            {category.id === currentActive && (
+                            {item.id === currentActive && (
                                 <Ionicons name="checkmark-outline" size={20} />
                             )}
                         </TouchableOpacity>
@@ -46,7 +51,7 @@ export default function Select({ items, currentActive, onSelect, emptyLabel }: {
                         styles.empty,
                         { color: colors.muted },
                     ]}>
-                        You have no items yet.
+                        {emptyLabel}
                     </Text>
                 )}
             </Section>
