@@ -13,6 +13,8 @@ import SelectCategoryScreen from "./select/category";
 import CreateCategoryScreen from "./create/category";
 import CreateLanguageScreen from "./create/language";
 import SelectLanguageScreen from "./select/language";
+import SelectWordClassScreen from "./select/wordClass";
+import CreateWordClassScreen from "./create/wordClass";
 
 export type RootStackParamList = {
     Home: undefined;
@@ -39,12 +41,17 @@ export type ModalStackParamList = {
         params: Record<string, any>;
         currentActive: string;
     };
+    SelectWordClass: {
+        params: Record<string, any>;
+        currentActive: string;
+    };
     SelectLanguage: {
         params: Record<string, any>;
         currentActive: string;
-    }
+    };
     CreateCategory: undefined;
     CreateLanguage: undefined;
+    CreateWordClass: undefined;
 }
 const ModalStack = createNativeStackNavigator<ModalStackParamList>();
 const ModalStackScreen = () => {
@@ -76,6 +83,15 @@ const ModalStackScreen = () => {
             <ModalStack.Screen 
                 name="CreateLanguage"
                 component={CreateLanguageScreen}
+                options={{ headerLargeTitle: true }}
+            />
+            <ModalStack.Screen 
+                name="SelectWordClass"
+                component={SelectWordClassScreen}
+            />
+            <ModalStack.Screen 
+                name="CreateWordClass"
+                component={CreateWordClassScreen}
                 options={{ headerLargeTitle: true }}
             />
         </ModalStack.Navigator>

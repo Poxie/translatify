@@ -1,4 +1,4 @@
-import { Category, Language, Word } from "@/types";
+import { Category, Language, Word, WordClass } from "@/types";
 import { collection, query, where } from "firebase/firestore";
 import { createContext, useContext } from "react"
 import { db, useAuth } from "../auth";
@@ -7,9 +7,11 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 const DatabaseContext = createContext<null | {
     words: Word[];
     categories: Category[];
+    wordClasses: WordClass[];
     languages: Language[];
     getWordById: (id: string) => Word | undefined;
     getCategoryById: (id?: string) => Category | undefined;
+    getWordClassById: (id?: string) => WordClass | undefined;
     getLanguageById: (id?: string) => Language | undefined;
 }>(null);
 
@@ -34,6 +36,10 @@ export default function DatabaseProvider({ children }: {
     const categoryQuery = query(categoryRef, where('authorId', '==', user.uid));
     const [categories] = useCollectionData(categoryQuery);
 
+    const wordClassesRef = collection(db, 'wordClasses');
+    const wordClassesQuery = query(wordClassesRef, where('authorId', '==', user.uid));
+    const [wordClasses] = useCollectionData(wordClassesQuery);
+
     const languageRef = collection(db, 'languages');
     const languageQuery = query(languageRef, where('authorId', '==', user.uid));
     const [languages] = useCollectionData(languageQuery);
@@ -45,6 +51,10 @@ export default function DatabaseProvider({ children }: {
         if(!id) return;
         return (categories || []).find(category => category.id === id) as Category | undefined;
     }
+    const getWordClassById = (id?: string) => {
+        if(!id) return;
+        return (wordClasses || []).find(wordClass => wordClass.id === id) as WordClass | undefined;
+    }
     const getLanguageById = (id?: string) => {
         if(!id) return;
         return (languages || []).find(language => language.id === id) as Language | undefined;
@@ -53,7 +63,9 @@ export default function DatabaseProvider({ children }: {
     const value = {
         words: (words || []) as Word[],
         categories: (categories || []) as Category[],
+        wordClasses: (wordClasses || []) as WordClass[],
         languages: (languages || []) as Language[],
+        getWordClassById,
         getLanguageById,
         getCategoryById,
         getWordById,

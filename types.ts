@@ -5,6 +5,7 @@ export type Word = {
     authorId: string;
     categoryId: string | null;
     languageId: string | null;
+    wordClassId: string | null;
 }
 export type Category = {
     id: string;
@@ -12,6 +13,11 @@ export type Category = {
     authorId: string;
 }
 export type Language = {
+    id: string;
+    name: string;
+    authorId: string;
+}
+export type WordClass = {
     id: string;
     name: string;
     authorId: string;

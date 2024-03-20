@@ -19,12 +19,13 @@ const getDummyWord: () => Partial<Word> = () => ({
     definition: '',
     categoryId: null,
     languageId: null,
+    wordClassId: null,
 })
 export default function CreateScreen({ route: { params } }: NativeStackScreenProps<ModalStackParamList, 'Create'>) {
     const { prevId, categoryId, languageId } = params;
     
     const { user } = useAuth();
-    const { getWordById, getCategoryById, getLanguageById } = useDatabase();
+    const { getWordById, getCategoryById, getWordClassById, getLanguageById } = useDatabase();
 
     const navigation = useNavigation();
 
@@ -52,6 +53,9 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
     const category = useMemo(() => (
         info.categoryId ? getCategoryById(info.categoryId) : undefined
     ), [info.categoryId]);
+    const wordClass = useMemo(() => (
+        info.wordClassId ? getWordClassById(info.wordClassId) : undefined
+    ), [info.wordClassId]);
     const language = useMemo(() => (
         info.languageId ? getLanguageById(info.languageId) : undefined
     ), [info.languageId]);
@@ -77,6 +81,7 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
                 definition: info.definition,
                 categoryId: info.categoryId,
                 languageId: info.languageId,
+                wordClassId: info.wordClassId,
                 authorId: user.uid,
             });
             navigation.goBack();
@@ -121,6 +126,16 @@ export default function CreateScreen({ route: { params } }: NativeStackScreenPro
                     params={{
                         ...params,
                         currentActive: info.categoryId,
+                    }}
+                />
+                <Divider />
+                <Selector 
+                    activeText={wordClass?.name}
+                    selectorText="Word class"
+                    screen={"SelectWordClass"}
+                    params={{
+                        ...params,
+                        currentActive: info.wordClassId,
                     }}
                 />
                 <Divider />
