@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     },
     section: {
         padding: Spacing.primary,
-        gap: Spacing.tertiary,
+        gap: Spacing.secondary,
     },
     empty: {
         textAlign: 'center',
