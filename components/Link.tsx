@@ -2,9 +2,10 @@ import { ModalStackParamList, RootStackParamList } from "@/app/index";
 import { useNavigation } from "@react-navigation/native";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 
-export default function Link({ children, href, style, screen, params, push }: {
+export default function Link({ children, href, onLongPress, style, screen, params, push }: {
     children: React.ReactNode;
     href: keyof RootStackParamList;
+    onLongPress?: () => void;
     style?: StyleProp<ViewStyle>;
     screen?: keyof ModalStackParamList;
     params?: Record<string, any>;
@@ -28,6 +29,7 @@ export default function Link({ children, href, style, screen, params, push }: {
 
     return(
         <TouchableOpacity 
+            onLongPress={onLongPress}
             onPress={onPress}
             style={style}
         >

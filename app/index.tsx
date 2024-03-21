@@ -55,6 +55,7 @@ export type ModalStackParamList = {
     };
     CreateCategory?: {
         prevId: string;
+        canClose?: boolean;
     };
     CreateLanguage?: {
         prevId: string;

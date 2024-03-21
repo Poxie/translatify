@@ -1,3 +1,4 @@
+import Link from "@/components/Link";
 import { Text } from "@/components/Themed";
 import ListCategory from "@/components/list/ListCategory";
 import ListItem from "@/components/list/ListItem";
@@ -43,9 +44,18 @@ export default function ListScreen() {
                             style={{ marginTop: Spacing.primary }}
                             key={category.id}
                         >
-                            <SectionHeader style={styles.sectionHeader}>
-                                {category.name}
-                            </SectionHeader>
+                            <Link
+                                href="Modal"
+                                screen="CreateCategory"
+                                params={{ 
+                                    prevId: category.id,
+                                    canClose: true,
+                                }}
+                            >
+                                <SectionHeader style={styles.sectionHeader}>
+                                    {category.name}
+                                </SectionHeader>
+                            </Link>
                             <ListSection 
                                 categoryId={category.id}
                                 key={category.id}

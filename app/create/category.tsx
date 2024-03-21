@@ -73,6 +73,8 @@ export default function CreateCategoryScreen({ route: {
         ),
         onHeaderRightPress: createCategory,
         headerRightDisabled: !info.name,
+        headerLeftText: params?.canClose ? 'Close' : undefined,
+        onHeaderLeftPress: params?.canClose ? navigation.goBack : undefined,
     })
 
     const selectableCategories = categories.filter(category => category.id !== prevCategory?.id);
