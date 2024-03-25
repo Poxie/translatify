@@ -9,8 +9,10 @@ import { useState } from "react";
 import Checkbox from "../Checkbox";
 import { useSelectWord } from "@/app/selectWord";
 
-export default function SelectWordCategory({ categoryId }: {
+export default function SelectWordCategory({ categoryId, isLast, isFirst }: {
     categoryId: string;
+    isLast: boolean;
+    isFirst: boolean;
 }) {
     const colors = useColors();
     const { words, categories, getCategoryById } = useDatabase();
@@ -20,7 +22,7 @@ export default function SelectWordCategory({ categoryId }: {
     const [expanded, setExpanded] = useState(true);
 
     const category = getCategoryById(categoryId);
-    const categoryWords = words.filter(word => word.categoryId === categoryId);
+    const categoryWords = words.filter(word => word.categoryId === categoryId && !isExcluded(word.id));
 
     const allWordsSelected = categoryWords.filter(word => !isExcluded(word.id)).every(word => isSelected(word.id));
     const empty = !categoryWords.length;
@@ -37,11 +39,15 @@ export default function SelectWordCategory({ categoryId }: {
 
     if(!category || empty) return null;
     return(
-        <View style={styles.container}>
+        <View>
             <TouchableOpacity 
                 style={[
                     styles.header,
-                    { borderColor: colors.backgroundTertiary },
+                    { 
+                        borderColor: colors.backgroundTertiary,
+                        borderBottomWidth: !expanded ? 0 : 1,
+                        borderTopWidth: isFirst ? 0 : 1,
+                    },
                 ]}
                 onPress={() => setExpanded(!expanded)}
             >
@@ -64,30 +70,35 @@ export default function SelectWordCategory({ categoryId }: {
                     active={allWordsSelected}
                 />
             </TouchableOpacity>
-            {expanded && categoryWords.map(word => (
-                <SelectWordItem
-                    wordId={word.id}
-                    key={word.id}
-                />
-            ))}
+            {expanded && (
+                <View style={styles.content}>
+                    {categoryWords.map(word => (
+                        <SelectWordItem
+                            wordId={word.id}
+                            key={word.id}
+                        />
+                    ))}
+                </View>
+            )}
         </View>
     )
 }
 const styles = StyleSheet.create({
-    container: {
-        gap: Spacing.secondary,
-    },
     header: {
-        paddingVertical: Spacing.secondary,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        paddingHorizontal: Spacing.primary,
+        paddingVertical: Spacing.primary,
     },
     headerContent: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: Spacing.tertiary,
+    },
+    content: {
+        marginVertical: Spacing.primary,
+        paddingHorizontal: Spacing.primary,
+        gap: Spacing.secondary,
     }
 })

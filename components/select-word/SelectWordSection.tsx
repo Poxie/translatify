@@ -6,10 +6,12 @@ import Spacing from "@/constants/Spacing";
 import SectionHeader from "../section-header";
 import SelectWordCategory from "./SelectWordCategory";
 import { Category } from "@/types";
+import useColors from "@/hooks/useColors";
 
 export default function SelectWordSection({ categoryId }: {
     categoryId: string;
 }) {
+    const colors = useColors();
     const { words, categories, getCategoryById } = useDatabase();
 
     const category = getCategoryById(categoryId);
@@ -38,15 +40,27 @@ export default function SelectWordSection({ categoryId }: {
             {category?.name || 'Uncategorized'}
         </SectionHeader>
         <Section style={styles.section}>
-            {categoryWords.map(word => (
-                <SelectWordItem 
-                    wordId={word.id}
-                    key={word.id}
-                />
-            ))}
-            {nestedCategories.map(category => (
+            {categoryWords.length !== 0 && (
+                <View style={[
+                    styles.uncategorized,
+                    {
+                        borderBottomWidth: nestedCategories.length ? 1 : 0,
+                        borderColor: colors.backgroundTertiary,
+                    }
+                ]}>
+                    {categoryWords.map(word => (
+                        <SelectWordItem 
+                            wordId={word.id}
+                            key={word.id}
+                        />
+                    ))}
+                </View>
+            )}
+            {nestedCategories.map((category, index) => (
                 <SelectWordCategory 
                     categoryId={category.id}
+                    isFirst={index === 0}
+                    isLast={index === nestedCategories.length - 1}
                     key={category.id}
                 />
             ))}
@@ -58,9 +72,10 @@ const styles = StyleSheet.create({
     header: {
         marginBottom: Spacing.tertiary,
     },
-    section: {
+    uncategorized: {
         padding: Spacing.primary,
+    },
+    section: {
         marginBottom: Spacing.primary,
-        gap: Spacing.secondary,
     }
 })

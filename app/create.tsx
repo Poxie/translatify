@@ -207,6 +207,6 @@ const styles = StyleSheet.create({
     container: {
         padding: Spacing.primary,
         paddingTop: Spacing.secondary,
-        gap: Spacing.primary,
+        gap: Spacing.secondary,
     },
 })
