@@ -5,6 +5,8 @@ import Spacing from "@/constants/Spacing";
 import { useDatabase } from "@/contexts/database";
 import { Text } from "../Themed";
 import ListItem from "./ListItem";
+import Divider from "../divider";
+import React from "react";
 
 export default function ListSection({ categoryId, style }: {
     categoryId: string;
@@ -18,41 +20,54 @@ export default function ListSection({ categoryId, style }: {
     const empty = !categoryWords.length && !categoryCategories.length;
     
     return(
-        <View style={[
+        <Section style={[
             styles.container,
             style,
         ]}>
-            {(categoryWords.length !== 0 || empty) && (
-                <Section style={styles.section}>
+            {categoryWords.length !== 0 && (
+                <View style={[
+                    styles.words,
+                ]}>
                     {categoryWords.map(word => (
                         <ListItem 
                             {...word}
                             key={word.id}
                         />
                     ))}
-                    {empty && (
-                        <Text style={styles.empty}>
-                            This category is empty.
-                        </Text>
-                    )}
-                </Section>
+                </View>
             )}
-            {categoryCategories.map(category => (
-                <Section
-                    key={category.id}
-                >
-                    <ListCategory 
-                        categoryId={category.id}
-                    />
-                </Section>
+            {categoryWords.length !== 0 && categoryCategories.length !== 0 && (
+                <Divider />
+            )}
+            {categoryCategories.map((category, index) => (
+                <React.Fragment key={category.id}>
+                    {index !== 0 && (
+                        <Divider />
+                    )}
+                    <View style={styles.categories}>
+                        <ListCategory 
+                            categoryId={category.id}
+                            key={category.id}
+                        />
+                    </View>
+                </React.Fragment>
             ))}
-        </View>
+            {empty && (
+                <Text style={styles.empty}>
+                    This category is empty.
+                </Text>
+            )}
+        </Section>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        gap: Spacing.quaternary * 2,
+    words: {
+        padding: Spacing.primary,
+        gap: Spacing.secondary,
+    },
+    categories: {
+        paddingVertical: Spacing.secondary,
     },
     section: {
         padding: Spacing.primary,
@@ -60,5 +75,6 @@ const styles = StyleSheet.create({
     },
     empty: {
         textAlign: 'center',
+        paddingVertical: Spacing.primary,
     }
 })
