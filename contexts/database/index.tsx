@@ -72,10 +72,10 @@ export default function DatabaseProvider({ children }: {
     }
 
     const value = {
-        words: (words || []) as Word[],
-        categories: (categories || []) as Category[],
-        wordClasses: (wordClasses || []) as WordClass[],
-        languages: (languages || []) as Language[],
+        words: ((words || []) as Word[]).sort((a,b) => a.term.localeCompare(b.term)),
+        categories: ((categories || []) as Category[]).sort((a,b) => a.name.localeCompare(b.name)),
+        wordClasses: ((wordClasses || []) as WordClass[]).sort((a,b) => a.name.localeCompare(b.name)),
+        languages: ((languages || []) as Language[]).sort((a,b) => a.name.localeCompare(b.name)),
         getWordTranslations,
         getCategoryWordCount,
         getWordClassById,
