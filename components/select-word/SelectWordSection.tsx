@@ -7,19 +7,21 @@ import SectionHeader from "../section-header";
 import SelectWordCategory from "./SelectWordCategory";
 import { Category } from "@/types";
 import useColors from "@/hooks/useColors";
+import { useSelectWord } from "@/app/selectWord";
 
 export default function SelectWordSection({ categoryId }: {
     categoryId: string | null;
 }) {
     const colors = useColors();
     const { words, categories, getCategoryById } = useDatabase();
+    const { isExcluded } = useSelectWord();
 
     const category = getCategoryById(categoryId);
-    const categoryWords = words.filter(word => word.categoryId === categoryId);
+    const categoryWords = words.filter(word => word.categoryId === categoryId && !isExcluded(word.id));
 
     const getNestedCategories = (categoryId: string | null) => {
         if(!categoryId) return [];
-        
+
         const nestedCategories: Category[] = [];
 
         const getChildCategories = (categoryId: string) => {

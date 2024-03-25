@@ -70,7 +70,7 @@ export default function SelectWordScreen({ route: {
         onHeaderRightPress: handleSelect,
     })
 
-    const rootWords = words.filter(w => !w.categoryId);
+    const rootWords = words.filter(w => !w.categoryId && !isExcluded(w.id));
     const rootCategories = categories.filter(c => !c.parentId);
 
     const value = {
