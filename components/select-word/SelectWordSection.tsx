@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     },
     uncategorized: {
         padding: Spacing.primary,
+        gap: Spacing.secondary,
     },
     section: {
         marginBottom: Spacing.primary,
