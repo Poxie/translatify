@@ -1,7 +1,7 @@
 import { Text } from "@/components/Themed";
 import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { ModalStackParamList } from ".";
 import { useDatabase } from "@/contexts/database";
 import SelectWordSection from "@/components/select-word/SelectWordSection";
@@ -82,20 +82,22 @@ export default function SelectWordScreen({ route: {
     }
     return(
         <SelectWordContext.Provider value={value}>
-            <ScrollView style={styles.container}>
-                {rootWords.length !== 0 && (
-                    <SelectWordSection 
-                        categoryId={null}
-                        key="uncategorized"
-                    />
-                )}
-                {rootCategories.map(category => (
-                    <SelectWordSection 
-                        categoryId={category.id}
-                        key={category.id}
-                    />
-                ))}
-            </ScrollView>
+            <SafeAreaView style={{ flex: 1 }}>
+                <ScrollView style={styles.container}>
+                    {rootWords.length !== 0 && (
+                        <SelectWordSection 
+                            categoryId={null}
+                            key="uncategorized"
+                        />
+                    )}
+                    {rootCategories.map(category => (
+                        <SelectWordSection 
+                            categoryId={category.id}
+                            key={category.id}
+                        />
+                    ))}
+                </ScrollView>
+            </SafeAreaView>
         </SelectWordContext.Provider>
     )
 }
