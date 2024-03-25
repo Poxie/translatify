@@ -41,7 +41,7 @@ export default function ListScreen() {
                 {rootCategories.map(category => {
                     return(
                         <View 
-                            style={{ marginTop: Spacing.primary }}
+                            style={{ marginBottom: Spacing.primary }}
                             key={category.id}
                         >
                             <Link
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     },
     section: {
         padding: Spacing.primary,
+        marginBottom: Spacing.primary,
         gap: Spacing.secondary,
     },
     empty: {
