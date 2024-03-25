@@ -29,7 +29,7 @@ export default function SelectWordScreen({ route: {
     params
 } }: NativeStackScreenProps<ModalStackParamList, 'SelectWord'>) {
     const navigation = useNavigation();
-    const { categories } = useDatabase();
+    const { words, categories } = useDatabase();
     
     const [selectedIds, setSelectedIds] = useState<string[]>(params.selectedIds || []);
 
@@ -69,6 +69,8 @@ export default function SelectWordScreen({ route: {
         headerRightDisabled: disabled,
         onHeaderRightPress: handleSelect,
     })
+
+    const rootWords = words.filter(w => !w.categoryId);
     const rootCategories = categories.filter(c => !c.parentId);
 
     const value = {
@@ -81,6 +83,12 @@ export default function SelectWordScreen({ route: {
     return(
         <SelectWordContext.Provider value={value}>
             <ScrollView style={styles.container}>
+                {rootWords.length !== 0 && (
+                    <SelectWordSection 
+                        categoryId={null}
+                        key="uncategorized"
+                    />
+                )}
                 {rootCategories.map(category => (
                     <SelectWordSection 
                         categoryId={category.id}

@@ -9,7 +9,7 @@ import { Category } from "@/types";
 import useColors from "@/hooks/useColors";
 
 export default function SelectWordSection({ categoryId }: {
-    categoryId: string;
+    categoryId: string | null;
 }) {
     const colors = useColors();
     const { words, categories, getCategoryById } = useDatabase();
@@ -17,7 +17,9 @@ export default function SelectWordSection({ categoryId }: {
     const category = getCategoryById(categoryId);
     const categoryWords = words.filter(word => word.categoryId === categoryId);
 
-    const getNestedCategories = (categoryId: string) => {
+    const getNestedCategories = (categoryId: string | null) => {
+        if(!categoryId) return [];
+        
         const nestedCategories: Category[] = [];
 
         const getChildCategories = (categoryId: string) => {
