@@ -20,10 +20,7 @@ export default function ListSection({ categoryId, style }: {
     const empty = !categoryWords.length && !categoryCategories.length;
     
     return(
-        <Section style={[
-            styles.container,
-            style,
-        ]}>
+        <Section style={style}>
             {categoryWords.length !== 0 && (
                 <View style={[
                     styles.words,
