@@ -10,6 +10,7 @@ const DatabaseContext = createContext<null | {
     wordClasses: WordClass[];
     languages: Language[];
     getWordById: (id: string) => Word | undefined;
+    getWordTranslations: (wordId: string) => Word[];
     getCategoryById: (id?: string | null) => Category | undefined;
     getWordClassById: (id?: string | null) => WordClass | undefined;
     getLanguageById: (id?: string | null) => Language | undefined;
@@ -63,12 +64,19 @@ export default function DatabaseProvider({ children }: {
     const getCategoryWordCount = (categoryId: string) => {
         return (words || []).filter(word => word.categoryId === categoryId).length;
     }
+    const getWordTranslations = (wordId: string) => {
+        const word = getWordById(wordId);
+        if(!word || !word.translationId) return [];
+
+        return (words as Word[])?.filter(w => w.id !== wordId && w.translationId === word.translationId);
+    }
 
     const value = {
         words: (words || []) as Word[],
         categories: (categories || []) as Category[],
         wordClasses: (wordClasses || []) as WordClass[],
         languages: (languages || []) as Language[],
+        getWordTranslations,
         getCategoryWordCount,
         getWordClassById,
         getLanguageById,

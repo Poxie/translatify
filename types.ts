@@ -6,6 +6,7 @@ export type Word = {
     categoryId: string | null;
     languageId: string | null;
     wordClassId: string | null;
+    translationId: string | null;
 }
 export type Category = {
     id: string;
