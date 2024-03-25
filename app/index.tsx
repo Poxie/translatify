@@ -144,7 +144,6 @@ export default function Navigation() {
                     name="List"
                     component={ListScreen}
                     options={{ 
-                        title: 'Word list',
                         headerLargeTitle: true, 
                         headerStyle: { backgroundColor: 'transparent'}
                     }}

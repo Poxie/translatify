@@ -7,12 +7,26 @@ import Section from "@/components/section";
 import SectionHeader from "@/components/section-header";
 import Spacing from "@/constants/Spacing";
 import { useDatabase } from "@/contexts/database";
+import useHeaderOptions from "@/hooks/useHeaderOptions";
 import { Category, Word } from "@/types";
+import { useNavigation } from "@react-navigation/native";
 import React, { useMemo } from "react";
 import { StyleSheet, SafeAreaView, View, ScrollView } from "react-native";
 
 export default function ListScreen() {
+    const navigation = useNavigation();
     const { words, categories } = useDatabase();
+
+    const createWord = () => {
+        navigation.navigate('Modal', {
+            screen: 'Create',
+        })
+    }
+    useHeaderOptions({
+        onHeaderRightPress: createWord,
+        headerRightText: 'Create',
+        headerText: 'Word list'
+    })
 
     const sortCategories = (categories: Category[]) => (
         categories.sort((a,b) => a.name[0].localeCompare(b.name[0]))
