@@ -52,7 +52,7 @@ export default function ListSection({ categoryId, style }: {
 
 const styles = StyleSheet.create({
     container: {
-        gap: Spacing.tertiary
+        gap: Spacing.quaternary * 2,
     },
     section: {
         padding: Spacing.primary,
