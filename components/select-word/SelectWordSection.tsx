@@ -38,6 +38,8 @@ export default function SelectWordSection({ categoryId }: {
     }
     const nestedCategories = getNestedCategories(categoryId);
 
+    const empty = !categoryWords.length && !nestedCategories.length;
+    if(empty) return null;
     return(
         <>
         <SectionHeader style={styles.header}>
