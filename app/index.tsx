@@ -139,6 +139,9 @@ export default function Navigation() {
                 <Stack.Screen 
                     name="Search"
                     component={SearchScreen}
+                    options={{
+                        headerTransparent: true,
+                    }}
                 />
                 <Stack.Screen 
                     name="List"

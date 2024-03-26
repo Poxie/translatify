@@ -1,9 +1,3 @@
-import { Text } from "@/components/Themed";
+import Search from "@/components/search";
 
-export default function SearchScreen() {
-    return(
-        <Text>
-            Search
-        </Text>
-    )
-}
+export default Search;
